@@ -8,7 +8,6 @@ import signal
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 
-
 '''
 Author: Arun Singh, arunsingh.in@gmail.com
 design an event log counter that logs events with granularity of 1 second
@@ -17,7 +16,13 @@ and counts the number of events logged in the last 5 minutes.
 We need to design the following two methods:
 
 log(): To log an event.
-count(): To return the number of events logged in the last 5 minutes 
+count(): To return the number of events logged in the last 5 minutes.
+
+Production Grade Readiness:
+Updating This logging system to prepare robust enough for high-throughput production 
+environments with scalable,fault-tolerant logging mechanisms, efficient resource management,
+and strong error handling. It provides the flexibility to handle hyper large-scale logging 
+while ensuring reliability and performance.
 '''
 
 
