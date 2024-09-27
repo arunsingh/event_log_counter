@@ -19,6 +19,18 @@ We need to design the following two methods:
 
 log(): To log an event.
 count(): To return the number of events logged in the last 5 minutes 
+
+Enhancements features Included in this code:
+
+Logging Levels: We will add support for different logging levels (INFO, WARNING, ERROR).
+Structured Logging: Logs will be structured in JSON format, which is helpful for parsing
+and analysis.
+File Rotation: We will implement file rotation based on size, so the log files do not 
+grow indefinitely.
+Graceful Shutdown: Ensure the system can shut down gracefully, flushing any remaining logs
+before terminating.
+Error Handling: Add error handling to ensure the system doesn't crash due to unexpected 
+issues.
 '''
 
 # Configure basic logging for internal monitoring
