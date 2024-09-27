@@ -3,7 +3,39 @@ import time
 from collections import defaultdict
 
 
-'''dev, staging environment version'''
+'''
+Author: Arun Singh, arunsingh.in@gmail.com
+
+For : dev, staging environment , NOT TO BE USED FOR PROD ENVs
+
+
+PersistentLogCounter Class:
+
+This class coordinates multiple LogShard instances (shards) to log and count events.
+Each shard writes log events to the same file (log_file).
+The log(event_id) method sends the event to a specific shard for logging and counting.
+LogShard Class:
+
+Manages the logging and counting of events in a specific shard.
+Circular Buffer: Used to store event counts for the last 5 minutes (300 seconds).
+
+Persistent Logging: Each log entry is written to a file (e.g., logs.txt) with a timestamp and event ID.
+Logging to Persistent Storage:
+
+The _write_log_to_file method appends log entries to the file logs.txt in the format [timestamp] event_id.
+Each entry is written to the file as the event is logged.
+
+Thread Safety: 
+We use a lock (self.lock) to ensure that both logging and file writing are thread-safe. Multiple threads 
+can log events concurrently without corrupting the file or counters.
+
+Efficient File I/O:
+Log entries are appended to the file. Since we are opening and closing the file for each write operation,
+this ensures that the data is written to disk immediately. If desired, you could use a buffered write strategy 
+(writing in batches) to improve performance for high-frequency logs.
+
+
+'''
 
 class PersistentLogCounter:
     def __init__(self, log_file='logs.txt', num_shards=10):
