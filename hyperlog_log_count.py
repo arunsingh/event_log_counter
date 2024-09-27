@@ -31,6 +31,31 @@ Graceful Shutdown: Ensure the system can shut down gracefully, flushing any rema
 before terminating.
 Error Handling: Add error handling to ensure the system doesn't crash due to unexpected 
 issues.
+
+Additional features included workflow:
+1. Logging Levels:
+The log() method now accepts a log level (INFO, WARNING, ERROR). This allows you to categorize logs 
+based on severity or importance.
+The log level is included in the structured JSON log entry.
+2. Structured Logging (JSON):
+Log entries are written in JSON format for better structure and parsing. Each log entry contains:
+timestamp: The time when the log was generated.
+level: The log level (e.g., INFO, ERROR).
+event_id: A unique identifier for the event.
+message: An optional message associated with the event.
+3. File Rotation:
+The log file will automatically rotate when it reaches a specified size (max_file_size). The file 
+name will include a timestamp to ensure uniqueness and allow for file rotation.
+The _rotate_file_if_needed() method checks the size of the current log file and rotates it if 
+necessary by closing the current file and opening a new one with a timestamp.
+4. Graceful Shutdown:
+The stop() method ensures that the log writer thread stops gracefully. It flushes any remaining
+logs from the buffer before closing the file handle.
+5. Error Handling:
+The program handles empty queues using the queue.Empty exception. It ensures that the main loop 
+does not block or crash if the log queue is temporarily empty.
+The file_handle.flush() method ensures that data is written to disk immediately, reducing the 
+risk of data loss in case of a crash.
 '''
 
 # Configure basic logging for internal monitoring
