@@ -66,6 +66,36 @@ Memory Usage: If the buffer grows too large, memory usage may become an issue. T
 buffer size based on your system’s available memory.
 '''
 
+'''
+Key Changes in the code:
+Checking Executor Status: In the run() method, before submitting a task to the ThreadPoolExecutor, 
+we now check if not self.executor._shutdown. This ensures that we don't attempt to submit new tasks
+after the executor has been shut down.
+
+Flushing Remaining Buffer: When the stop_event is set, the run() method ensures that any remaining 
+entries in the buffer are flushed before shutting down the executor. This is done synchronously 
+with _flush_buffer(self.buffer).
+
+Proper Shutdown: The executor.shutdown(wait=True) method ensures that all pending tasks in the 
+thread pool are completed before the program exits. This prevents any data loss.
+
+How It Works:
+The main loop (run() method) continues to pull log entries from the queue and append them to the buffer.
+The buffer is flushed either when it reaches a certain size (buffer_size) or after a certain amount of 
+time (flush_interval).
+Before shutting down the system, the remaining logs in the buffer are flushed to disk, and the
+ThreadPoolExecutor ensures that no new tasks are submitted after the shutdown.
+
+Key Fixes:
+Thread Lifecycle Management: We now correctly manage the thread's lifecycle using self.join() in the stop()
+method, which waits for the logging thread to finish before the main program exits.
+
+Thread Execution: The AsyncBufferedLogWriter is now started properly as a thread when self.log_writer.start()
+is called.
+
+Buffer Flushing and Thread Shutdown: After the logging thread stops (when self.stop_event is set), any 
+remaining logs in the buffer are flushed before the thread terminates.
+'''
 
 # Configure basic logging for internal monitoring
 logging.basicConfig(level=logging.INFO,
