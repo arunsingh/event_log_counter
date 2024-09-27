@@ -23,6 +23,47 @@ Updating This logging system to prepare robust enough for high-throughput produc
 environments with scalable,fault-tolerant logging mechanisms, efficient resource management,
 and strong error handling. It provides the flexibility to handle hyper large-scale logging 
 while ensuring reliability and performance.
+
+
+Key Optimizations done for Handling 5-10 Million Events per Minute:
+Increased Buffer Size: The buffer size is set to 1,000,000 log entries. This allows the system to collect a
+large number of log entries before flushing them to disk, which minimizes the number of I/O
+operations.
+
+Thread Pool for Writing: The ThreadPoolExecutor is used to asynchronously write logs to the disk. 
+This allows multiple threads to handle log writing in parallel, reducing the time spent waiting on I/O operations.
+File Rotation:
+
+Log files are rotated when they exceed the maximum size (max_file_size). This prevents individual log
+files from becoming too large and unmanageable.
+
+Concurrent Logging: Multiple threads are used to simulate logging 10 million events in parallel. 
+Each thread logs a portion of the total events.
+
+Asynchronous Buffered Writing: Logs are written to disk asynchronously, allowing the main logging threads to
+continue adding entries without waiting for disk I/O.
+
+Locking Mechanism: We use a lock for protecting shared resources, but this is only applied when writing the 
+actual buffer to disk, thus minimizing the impact on performance.
+
+Performance Considerations:
+
+Memory Usage: With a buffer size of 1 million entries, the system will consume memory to store these
+entries before flushing them to disk. Adjust the buffer size based on your available memory.
+
+Disk Throughput: The performance of the disk (SSD vs HDD) will have a significant impact on how 
+quickly logs can be written. Using SSDs is recommended for high throughput.
+
+Thread Pool Size: The num_workers parameter controls the number of threads used for writing logs 
+to disk. Increasing this number allows more logs to be written in parallel but can also increase
+contention if too high.
+
+Potential Bottlenecks
+Disk I/O: If the disk cannot handle the write throughput, it will become a bottleneck. Consider
+using faster disks (SSD or NVMe) or writing logs to multiple files in parallel.
+
+Memory Usage: If the buffer grows too large, memory usage may become an issue. Tune the
+buffer size based on your system’s available memory.
 '''
 
 
