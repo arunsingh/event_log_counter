@@ -383,8 +383,8 @@ if __name__ == "__main__":
 
     counter = EventLogCounter(log_file="async_buffered_logs")
 
-    # Simulate logging 10 million events for testing purposes
-    num_events = 10_000_000
+    # Simulate logging 20 million events for testing purposes
+    num_events = 20_000_000
     for i in range(num_events):
         event_id = f"event_{i}"
         counter.log("INFO", event_id, f"Message for {event_id}")
